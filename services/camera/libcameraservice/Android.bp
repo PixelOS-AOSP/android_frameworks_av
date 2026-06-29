@@ -325,6 +325,7 @@ cc_library_static {
     ],
 }
 
+cc_library_static {
     name: "libstatslog_framework",
     generated_sources: ["statslog_framework.cpp"],
     generated_headers: ["statslog_framework.h"],
