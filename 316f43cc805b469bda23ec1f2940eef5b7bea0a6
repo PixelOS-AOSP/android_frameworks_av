@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd02c308_0b450f6d",
+        "filename": "media/libstagefright/MediaCodec.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1362,
+      "author": {
+        "id": 1000151
+      },
+      "writtenOn": "2026-08-22T21:50:44Z",
+      "side": 1,
+      "message": "igbp is not defined here, so the build fails. It is present in the original commit.\n\n    // Change IOMX to use Surface too in a follow up CL.\n    sp\u003cIGraphicBufferProducer\u003e igbp \u003d mediaflagtools::surfaceTypeToIGBP(surface);\n    status_t err \u003d omx-\u003ecreateInputSurface(\u0026igbp, \u0026bufferSource);\n\n    if (err !\u003d OK) {\n        ALOGE(\"Failed to create persistent input surface.\");\n        return NULL;\n    }",
+      "range": {
+        "startLine": 1361,
+        "startChar": 0,
+        "endLine": 1362,
+        "endChar": 20
+      },
+      "revId": "316f43cc805b469bda23ec1f2940eef5b7bea0a6",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    }
+  ]
+}
