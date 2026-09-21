@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d10bb4c3_34229521",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2026-09-21T12:20:58Z",
+      "side": 1,
+      "message": "sm8250/kona(alioth)",
+      "range": {
+        "startLine": 9,
+        "startChar": 27,
+        "endLine": 9,
+        "endChar": 34
+      },
+      "revId": "5373c8b0c0a45a88fbca9e02b85457b5a33317aa",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2c47ba60_a0adaee8",
