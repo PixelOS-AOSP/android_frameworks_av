@@ -1140,6 +1140,13 @@ status_t AidlCamera3Device::AidlHalInterface::configureStreams(
             }
         }
         dst->max_buffers = src.maxBuffers;
+#ifdef TARGET_SHIPS_OPLUS_CAM
+        // The HAL requests the next batch while the previous one is still in flight.
+        if (operationMode == StreamConfigurationMode::CONSTRAINED_HIGH_SPEED_MODE &&
+                contains(config->hal_buffer_managed_streams, streamId)) {
+            dst->max_buffers *= 2;
+        }
+#endif
     }
 
     return res;
@@ -1682,6 +1689,38 @@ status_t AidlCamera3Device::AidlCamera3DeviceInjectionMethods::replaceHalInterfa
 void AidlCamera3Device::applyMaxBatchSizeLocked(
         RequestList* requestList, const sp<camera3::Camera3OutputStreamInterface>& stream) {
     int batchSize = requestList->size();
+
+#ifdef TARGET_SHIPS_OPLUS_CAM
+    // The HAL reports batch_size_max 1, yet mislabels the buffers of batches larger than 4.
+    // It also consumes a single request per 60fps sensor batch, so preview needs to be part of
+    // every request, not only the first of the burst, to run at more than 60 / burst size fps.
+    constexpr int kOplusBatchSize = 4;
+    if (batchSize >= kOplusBatchSize && batchSize % kOplusBatchSize == 0) {
+        batchSize = kOplusBatchSize;
+        const auto& firstRequest = *requestList->begin();
+        for (auto request = requestList->begin(); request != requestList->end(); request++) {
+            if (requestList->distance(requestList->begin(), request) % batchSize == 0) {
+                (*request)->mBatchSize = batchSize;
+            }
+            if (*request == firstRequest) {
+                continue;
+            }
+            for (const auto& outputStream : firstRequest->mOutputStreams) {
+                bool present = false;
+                for (const auto& existing : (*request)->mOutputStreams) {
+                    present |= existing->getId() == outputStream->getId();
+                }
+                if (!present) {
+                    (*request)->mOutputStreams.push(outputStream);
+                    (*request)->mOutputSurfaces[outputStream->getId()] =
+                            firstRequest->mOutputSurfaces[outputStream->getId()];
+                }
+            }
+        }
+        stream->setBatchSize(batchSize);
+        return;
+    }
+#endif
 
     if (!mBatchSizeLimitEnabled) {
         (*requestList->begin())->mBatchSize = batchSize;
