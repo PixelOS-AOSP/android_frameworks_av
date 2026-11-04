@@ -16,6 +16,9 @@
 
 #include <inttypes.h>
 
+#include <algorithm>
+#include <vector>
+
 #define LOG_TAG "GraphicBufferSource"
 //#define LOG_NDEBUG 0
 #include <utils/Log.h>
@@ -363,6 +366,12 @@ GraphicBufferSource::GraphicBufferSource() :
         ALOGE("Error connecting to BufferQueue: %s (%d)",
                 strerror(-mInitCheck), mInitCheck);
         return;
+    }
+
+    // Let producers extend the queue past NUM_BUFFER_SLOTS, like ConsumerBase does.
+    // Camera HALs can need more than 64 buffers for high frame rate recording.
+    if (status_t err = mConsumer->allowUnlimitedSlots(true); err != NO_ERROR) {
+        ALOGW("Failed to allow unlimited slots: %s (%d)", strerror(-err), err);
     }
 
     memset(&mDefaultColorAspectsPacked, 0, sizeof(mDefaultColorAspectsPacked));
@@ -1060,27 +1069,28 @@ void GraphicBufferSource::onBufferAcquired_l(const VideoBuffer &buffer) {
 void GraphicBufferSource::onBuffersReleased() {
     Mutex::Autolock lock(mMutex);
 
-    uint64_t slotMask;
-    uint64_t releaseMask;
-    if (mConsumer->getReleasedBuffers(&releaseMask) != NO_ERROR) {
-        slotMask = 0xffffffffffffffffULL;
+    // Slots can go past NUM_BUFFER_SLOTS now that unlimited slots are allowed, so use
+    // the extended mask like ConsumerBase does.
+    std::vector<bool> releasedSlots;
+    if (mConsumer->getReleasedBuffersExtended(&releasedSlots) != NO_ERROR) {
         ALOGW("onBuffersReleased: unable to get released buffer set");
-    } else {
-        slotMask = releaseMask;
-        ALOGV("onBuffersReleased: 0x%016" PRIx64, slotMask);
+        size_t slotCount = BufferQueue::NUM_BUFFER_SLOTS;
+        if (!mBufferSlots.isEmpty()) {
+            slotCount = std::max(slotCount, size_t(mBufferSlots.keyAt(mBufferSlots.size() - 1)) + 1);
+        }
+        releasedSlots.assign(slotCount, true);
     }
 
     AString unpopulated;
-    for (int i = 0; i < BufferQueue::NUM_BUFFER_SLOTS; i++) {
-        if ((slotMask & 0x01) != 0) {
+    for (size_t i = 0; i < releasedSlots.size(); i++) {
+        if (releasedSlots[i]) {
             if (!discardBufferInSlot_l(i)) {
                 if (!unpopulated.empty()) {
                     unpopulated.append(", ");
                 }
-                unpopulated.append(i);
+                unpopulated.append(int(i));
             }
         }
-        slotMask >>= 1;
     }
     if (!unpopulated.empty()) {
         ALOGW("released unpopulated slots: [%s]", unpopulated.c_str());
