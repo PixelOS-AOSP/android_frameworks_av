@@ -238,8 +238,12 @@ bool roundBufferDimensionNearest(int32_t width, int32_t height,
     // Avoid roundBufferDimensionsNearest for privileged client YUV streams to meet the AIDE2
     // requirement. AIDE2 is vendor enhanced feature which requires special resolutions and
     // those are not populated in static capabilities.
+    // IMPLEMENTATION_DEFINED is needed too: OPlus camera requests e.g. a 3840x2160 private
+    // stream on the front camera for Dolby Vision video, which is not in the static configs;
+    // rounding it to 1920x1440 breaks the HAL's video AI NR node and the video FOV.
     if (isPriviledgedClient == true &&
             (format == HAL_PIXEL_FORMAT_YCbCr_420_888 || format == HAL_PIXEL_FORMAT_BLOB ||
+             format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED ||
              format == HAL_PIXEL_FORMAT_Y8 || format == HAL_PIXEL_FORMAT_Y16)) {
         ALOGI("Bypass roundBufferDimensionNearest for privilegedClient YUV streams "
                 "width %d height %d for format %d", width, height, format);
