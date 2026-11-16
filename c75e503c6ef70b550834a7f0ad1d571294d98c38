@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19861f81_da0fcd83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000093
+      },
+      "writtenOn": "2026-11-16T09:31:17Z",
+      "side": 1,
+      "message": "Verified on PDX223/237. This is needed for Sony devices so it picks the L/R mic instead of the back mic, which fixes low volume when recording videos.",
+      "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    }
+  ]
+}
