@@ -51,6 +51,42 @@
       "parentUuid": "05e4f492_c1acf8c0",
       "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
       "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "863d211c_dbc44861",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000151
+      },
+      "writtenOn": "2026-11-26T18:52:42Z",
+      "side": 1,
+      "message": "Double-checked this flag on ziyi, and it looks like I was wrong the first time. BACK_MIC is needed for the PAL camcorder_landscape routing, so the flag should remain disabled on ziyi.",
+      "parentUuid": "65207007_2477b719",
+      "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f88b21d6_9e0143d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000151
+      },
+      "writtenOn": "2026-11-26T18:52:42Z",
+      "side": 1,
+      "message": "Double-checked this flag, and it looks like I was wrong the first time. At least on my Ziyi (xiaomi), this flag isn\u0027t needed.",
+      "parentUuid": "65207007_2477b719",
+      "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
     }
   ]
 }
