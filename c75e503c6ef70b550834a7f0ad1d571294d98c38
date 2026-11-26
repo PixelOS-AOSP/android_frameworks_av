@@ -16,6 +16,23 @@
       "message": "Verified on PDX223/237. This is needed for Sony devices so it picks the L/R mic instead of the back mic, which fixes low volume when recording videos.",
       "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
       "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05e4f492_c1acf8c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000151
+      },
+      "writtenOn": "2026-11-26T15:43:23Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this also be useful for some Xiaomi devices, depending on their PAL mic routing?",
+      "revId": "c75e503c6ef70b550834a7f0ad1d571294d98c38",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
     }
   ]
 }
